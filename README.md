@@ -61,7 +61,7 @@ O aplicativo abrirá no navegador Chrome.
 
 ### Clientes
 - Listar todos os clientes
-- Adicionar novo cliente (nome, sobrenome, email, idade)
+- Adicionar novo cliente (nome, sobrenome, email, idade, foto)
 - Editar cliente existente
 - Deletar cliente
 
