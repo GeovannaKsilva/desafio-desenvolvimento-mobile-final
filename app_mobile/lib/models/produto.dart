@@ -17,7 +17,7 @@ class Produto {
   // Converte JSON do backend para objeto Produto
   factory Produto.fromJson(Map<String, dynamic> json) {
     return Produto(
-      id: json['id'],
+      id: int.parse(json['id'].toString()),
       nome: json['nome'],
       descricao: json['descricao'],
       preco: json['preco'].toDouble(),

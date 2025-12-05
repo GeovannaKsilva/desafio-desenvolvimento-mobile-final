@@ -18,13 +18,20 @@ class Cliente {
 
   // Converte JSON do backend para objeto Cliente
   factory Cliente.fromJson(Map<String, dynamic> json) {
+    int idadeValue;
+    if (json['idade'] is String) {
+      idadeValue = int.parse(json['idade']);
+    } else {
+      idadeValue = json['idade'] as int;
+    }
+
     return Cliente(
-      id: json['id'],
-      nome: json['nome'],
-      sobrenome: json['sobrenome'],
-      email: json['email'],
-      idade: json['idade'],
-      foto: json['foto'],
+      id: json['id'] as int?,
+      nome: json['nome'] as String,
+      sobrenome: json['sobrenome'] as String,
+      email: json['email'] as String,
+      idade: idadeValue,
+      foto: json['foto'] as String?,
     );
   }
 

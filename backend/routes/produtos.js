@@ -56,7 +56,7 @@ router.put('/:id', (req, res) => {
       if (this.changes === 0) {
         return res.status(404).json({ error: 'Produto não encontrado' });
       }
-      res.json({ id: req.params.id, nome, descricao, preco });
+      res.json({ id: Number(req.params.id), nome, descricao, preco });
     }
   );
 });

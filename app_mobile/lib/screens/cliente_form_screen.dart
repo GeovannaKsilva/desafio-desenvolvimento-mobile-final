@@ -20,17 +20,18 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
   late TextEditingController _sobrenomeController;
   late TextEditingController _emailController;
   late TextEditingController _idadeController;
+  late TextEditingController _fotoController;
 
   bool _loading = false;
 
   @override
   void initState() {
     super.initState();
-    // Inicializa os controllers com dados do cliente se estiver editando
     _nomeController = TextEditingController(text: widget.cliente?.nome ?? '');
     _sobrenomeController = TextEditingController(text: widget.cliente?.sobrenome ?? '');
     _emailController = TextEditingController(text: widget.cliente?.email ?? '');
     _idadeController = TextEditingController(text: widget.cliente?.idade.toString() ?? '');
+    _fotoController = TextEditingController(text: widget.cliente?.foto ?? '');
   }
 
   @override
@@ -39,6 +40,7 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
     _sobrenomeController.dispose();
     _emailController.dispose();
     _idadeController.dispose();
+    _fotoController.dispose();
     super.dispose();
   }
 
@@ -47,13 +49,22 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
     if (_formKey.currentState!.validate()) {
       setState(() => _loading = true);
 
+      final idadeValue = int.tryParse(_idadeController.text);
+      if (idadeValue == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Idade inválida')),
+        );
+        setState(() => _loading = false);
+        return;
+      }
+
       final cliente = Cliente(
         id: widget.cliente?.id,
         nome: _nomeController.text,
         sobrenome: _sobrenomeController.text,
         email: _emailController.text,
-        idade: int.parse(_idadeController.text),
-        foto: widget.cliente?.foto,
+        idade: idadeValue,
+        foto: _fotoController.text.isEmpty ? null : _fotoController.text,
       );
 
       try {
@@ -106,6 +117,9 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
                         if (value == null || value.isEmpty) {
                           return 'Por favor, insira o nome';
                         }
+                        if (!RegExp(r'^[a-zA-ZÀ-ÿ\s]+$').hasMatch(value)) {
+                          return 'Nome deve conter apenas letras';
+                        }
                         return null;
                       },
                     ),
@@ -122,6 +136,9 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor, insira o sobrenome';
+                        }
+                        if (!RegExp(r'^[a-zA-ZÀ-ÿ\s]+$').hasMatch(value)) {
+                          return 'Sobrenome deve conter apenas letras';
                         }
                         return null;
                       },
@@ -168,6 +185,19 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
                         }
                         return null;
                       },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Campo Foto (URL)
+                    TextFormField(
+                      controller: _fotoController,
+                      decoration: const InputDecoration(
+                        labelText: 'URL da Foto (opcional)',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.image),
+                        hintText: 'https://exemplo.com/foto.jpg',
+                      ),
+                      keyboardType: TextInputType.url,
                     ),
                     const SizedBox(height: 32),
 

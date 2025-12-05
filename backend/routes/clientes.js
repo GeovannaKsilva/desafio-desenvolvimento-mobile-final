@@ -55,7 +55,7 @@ router.put('/:id', (req, res) => {
       if (this.changes === 0) {
         return res.status(404).json({ error: 'Cliente não encontrado' });
       }
-      res.json({ id: req.params.id, nome, sobrenome, email, idade, foto });
+      res.json({ id: Number(req.params.id), nome, sobrenome, email, idade, foto });
     }
   );
 });
